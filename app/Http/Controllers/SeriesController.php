@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $series = ["Punisher", "Lost", "Grey"];
         return view("series.index")->with("series", $series);
@@ -15,5 +15,10 @@ class SeriesController extends Controller
     public function create()
     {
         return view('series.create');
+    }
+
+    public function store(Request $request)
+    {
+        $name = $request->input('name');
     }
 }
