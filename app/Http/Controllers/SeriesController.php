@@ -9,9 +9,7 @@ use App\Repositories\SeriesRepository;
 
 class SeriesController extends Controller
 {
-    public function __construct(private SeriesRepository $repository)
-    {
-    }
+    public function __construct(private SeriesRepository $repository) {}
 
     public function index(Request $request)
     {
@@ -30,15 +28,19 @@ class SeriesController extends Controller
     public function store(SeriesFormRequest $request)
     {
         $serie = $this->repository->add($request);
-        return to_route("series.index")
-            ->with("message.success", "Série '{$serie->name}' criada com sucesso");
+        return to_route("series.index")->with(
+            "message.success",
+            "Série '{$serie->name}' criada com sucesso"
+        );
     }
 
     public function destroy(Series $series, Request $request)
     {
         $series->delete();
-        return to_route("series.index")
-            ->with("message.success", "Série '{$series->name}' removida com sucesso");
+        return to_route("series.index")->with(
+            "message.success",
+            "Série '{$series->name}' removida com sucesso"
+        );
     }
 
     public function edit(Series $series)
@@ -50,7 +52,9 @@ class SeriesController extends Controller
     {
         $series->fill($request->all());
         $series->save();
-        return to_route("series.index")
-            ->with('message.success', "Série '{$series->name}' editada com sucesso");
+        return to_route("series.index")->with(
+            "message.success",
+            "Série '{$series->name}' editada com sucesso"
+        );
     }
 }
