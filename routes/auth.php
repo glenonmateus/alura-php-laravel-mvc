@@ -82,9 +82,9 @@ Route::middleware("auth")->group(function () {
         AuthenticatedSessionController::class,
         "destroy",
     ])->name("logout");
-    Route::get("/", function () {
-        return redirect("/series");
-    });
+    // Route::get("/", function () {
+    //     return redirect("/series");
+    // });
     Route::get("/series/{series}/seasons", [
         SeasonsController::class,
         "index",

@@ -6,6 +6,8 @@ use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use App\Repositories\SeriesRepository;
+use App\Mail\SeriesCreated;
+use Illuminate\Support\Facades\Mail;
 
 class SeriesController extends Controller
 {
@@ -28,6 +30,13 @@ class SeriesController extends Controller
     public function store(SeriesFormRequest $request)
     {
         $serie = $this->repository->add($request);
+        $email = new SeriesCreated(
+            $serie->name,
+            $serie->id,
+            $request->seasons,
+            $request->episodesPerSeason
+        );
+        Mail::to($request->user())->send($email);
         return to_route("series.index")->with(
             "message.success",
             "Série '{$serie->name}' criada com sucesso"
