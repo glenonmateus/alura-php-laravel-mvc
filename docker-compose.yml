@@ -22,14 +22,13 @@ services:
               published: "8082"
               protocol: tcp
               app_protocol: http
-              mode: host
 
     php-fpm:
         tty: true
         build:
             context: docker/php-fpm
             args:
-                PHP_VERSION: 8.0
+                PHP_VERSION: 8.4
         depends_on:
             database:
                 condition: service_healthy
@@ -37,6 +36,22 @@ services:
             - type: bind
               source: .
               target: /app
+
+    node:
+        tty: true
+        image: node:24-bookworm-slim
+        working_dir: /app
+        command: npm run dev
+        profiles:
+            - vite
+        volumes:
+            - type: bind
+              source: .
+              target: /app
+        ports:
+            - name: vite
+              target: 3000
+              published: "3000"
 
     database:
         tty: true
@@ -58,7 +73,6 @@ services:
             - name: mysql
               target: 3306
               published: "3306"
-              mode: host
 
 volumes:
     mariadb_data:
