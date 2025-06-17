@@ -5,6 +5,9 @@ services:
         tty: true
         build:
             context: docker/nginx
+        depends_on:
+            php-fpm:
+                condition: service_started
         volumes:
             - type: bind
               source: .
@@ -26,17 +29,7 @@ services:
         build:
             context: docker/php-fpm
             args:
-                PHP_VERSION: 8.4
-        volumes:
-            - type: bind
-              source: .
-              target: /app
-
-    queue:
-        image: alura-php-laravel-mvc-php-fpm
-        working_dir: /app
-        command: ["php", "artisan", "queue:work", "--tries=3"]
-        stop_signal: SIGTERM
+                PHP_VERSION: 8.0
         depends_on:
             database:
                 condition: service_healthy
