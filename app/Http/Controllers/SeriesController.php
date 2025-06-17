@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SeriesFormRequest;
 use App\Mail\SeriesCreated;
 use App\Models\Series;
-use App\Models\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -15,10 +14,7 @@ use Illuminate\Support\Facades\Mail;
 
 class SeriesController extends Controller
 {
-    public function __construct(
-        private SeriesRepository $repository
-    ) {
-    }
+    public function __construct(private SeriesRepository $repository) {}
 
     public function index(Request $request): View
     {
@@ -37,16 +33,13 @@ class SeriesController extends Controller
     public function store(SeriesFormRequest $request): RedirectResponse
     {
         $serie = $this->repository->add($request);
-        $userList = User::all();
-        foreach ($userList as $user) {
-            $email = new SeriesCreated(
-                $serie->name,
-                $serie->id,
-                $request->seasons,
-                $request->episodesPerSeason
-            );
-            Mail::to($user)->send($email);
-        }
+        $email = new SeriesCreated(
+            $serie->name,
+            $serie->id,
+            $request->seasons,
+            $request->episodesPerSeason
+        );
+        Mail::to($request->user())->queue($email);
         return to_route("series.index")->with(
             "message.success",
             "Série '{$serie->name}' criada com sucesso"
@@ -67,8 +60,10 @@ class SeriesController extends Controller
         return view("series.edit")->with("serie", $series);
     }
 
-    public function update(Series $series, SeriesFormRequest $request): RedirectResponse
-    {
+    public function update(
+        Series $series,
+        SeriesFormRequest $request
+    ): RedirectResponse {
         $series->fill($request->all());
         $series->save();
         return to_route("series.index")->with(
