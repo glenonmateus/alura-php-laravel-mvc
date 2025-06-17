@@ -7,6 +7,10 @@ ARG PHP_EXTENSIONS
 
 RUN <<EOT
 set -xe
+apt-get update
+apt-get install -y --no-install-recommends \
+    supervisor=4.2.5-1
+rm -rf /var/lib/apt/lists/*
 mv "${PHP_INI_DIR}/php.ini-production" "${PHP_INI_DIR}/php.ini"
 cat <<EOF > "${PHP_INI_DIR}/conf.d/10-session.ini"
 session.cookie_httponly=1
@@ -16,4 +20,6 @@ EOF
 docker-php-ext-install ${PHP_EXTENSIONS}
 EOT
 
+COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 WORKDIR /app
+ENTRYPOINT [ "supervisor", "-c", "/etc/supervisor/supervisor.conf" ]
