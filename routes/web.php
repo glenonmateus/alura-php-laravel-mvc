@@ -19,18 +19,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get(
-    "/email",
-    function () {
-        return new SeriesCreated(
-            'Série de teste',
-            1,
-            5,
-            10
-        );
-    }
-);
-
-Route::get(
     "/",
     function () {
         return view("welcome");
