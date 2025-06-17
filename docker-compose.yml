@@ -1,0 +1,71 @@
+name: alura-php-laravel-mvc
+
+services:
+    nginx:
+        tty: true
+        build:
+            context: docker/nginx
+        volumes:
+            - type: bind
+              source: .
+              target: /app
+            - type: bind
+              source: docker/nginx/default.conf
+              target: /etc/nginx/conf.d/default.conf
+              read_only: true
+        ports:
+            - name: web
+              target: 80
+              published: "8082"
+              protocol: tcp
+              app_protocol: http
+              mode: host
+
+    php-fpm:
+        tty: true
+        build:
+            context: docker/php-fpm
+            args:
+                PHP_VERSION: 8.4
+        volumes:
+            - type: bind
+              source: .
+              target: /app
+
+    queue:
+        image: alura-php-laravel-mvc-php-fpm
+        working_dir: /app
+        command: ["php", "artisan", "queue:work", "--tries=3"]
+        stop_signal: SIGTERM
+        depends_on:
+            database:
+                condition: service_healthy
+        volumes:
+            - type: bind
+              source: .
+              target: /app
+
+    database:
+        tty: true
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        image: mariadb:noble
+        healthcheck:
+            test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+            interval: 5s
+            timeout: 10s
+            retries: 3
+        environment:
+            MARIADB_DATABASE: alura-php-laravel-mvc
+            MARIADB_ROOT_PASSWORD: root
+        volumes:
+            - type: volume
+              source: mariadb_data
+              target: /var/lib/mysql
+        ports:
+            - name: mysql
+              target: 3306
+              published: "3306"
+              mode: host
+
+volumes:
+    mariadb_data:
