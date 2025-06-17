@@ -16,7 +16,7 @@
        <a href="{{ route('logout') }}">Sair</a>
        @endauth
        @guest
-       <a href="{{ route('sigin') }}">Entrar</a>
+       <a href="{{ route('login') }}">Entrar</a>
        @endguest
    </div>
 </nav>
