@@ -32,12 +32,15 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request): RedirectResponse
     {
+        Validator::validate($request->all(), [ 'cover' => [ File::image() ] ]);
+        $cover = $request->hasFile('cover') ? $request->cover->store("covers", "public") : null;
+        $request->cover = $cover;
         $serie = $this->repository->add($request);
-        $email = new SeriesCreated(
+        SeriesCreatedEvent::dispatch(
             $serie->name,
             $serie->id,
             $request->seasons,
-            $request->episodesPerSeason
+            $request->episodesPerSeason,
         );
         Mail::to($request->user())->queue($email);
         return to_route("series.index")->with(
