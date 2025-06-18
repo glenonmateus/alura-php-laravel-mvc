@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SeriesCreatedEvent;
+use App\Events\DeleteSeriesCoverEvent;
 use App\Http\Requests\SeriesFormRequest;
-use App\Mail\SeriesCreated;
 use App\Models\Series;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Repositories\SeriesRepository;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\File;
 
 class SeriesController extends Controller
 {
-    public function __construct(private SeriesRepository $repository) {}
+    public function __construct(private SeriesRepository $repository)
+    {
+    }
 
     public function index(Request $request): View
     {
@@ -42,7 +46,6 @@ class SeriesController extends Controller
             $request->seasons,
             $request->episodesPerSeason,
         );
-        Mail::to($request->user())->queue($email);
         return to_route("series.index")->with(
             "message.success",
             "Série '{$serie->name}' criada com sucesso"
