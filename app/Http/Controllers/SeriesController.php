@@ -46,9 +46,10 @@ class SeriesController extends Controller
         );
     }
 
-    public function destroy(Series $series, Request $request): RedirectResponse
+    public function destroy(Series $series): RedirectResponse
     {
         $series->delete();
+        DeleteSeriesCoverEvent::dispatch($series->cover);
         return to_route("series.index")->with(
             "message.success",
             "Série '{$series->name}' removida com sucesso"
