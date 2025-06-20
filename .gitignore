@@ -1,3 +1,4 @@
+.zed/
 .php-cs-fixer.cache
 /node_modules
 /public/build
