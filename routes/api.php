@@ -17,17 +17,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware("auth:sanctum")->get("/user", function (Request $request) {
-    return $request->user();
-});
+Route::middleware("auth:sanctum")->get(
+    "/user",
+    function (Request $request) {
+        return $request->user();
+    }
+);
 
-Route::apiResource("/series", SeriesController::class);
+Route::apiResource(
+    "/series",
+    SeriesController::class
+);
 
-Route::controller(SeasonsController::class)->group(function () {
-    Route::get("/series/{series}/seasons", "index");
-});
+Route::controller(SeasonsController::class)->group(
+    function () {
+        Route::get("/series/{series}/seasons", "index");
+    }
+);
 
-Route::controller(EpisodesController::class)->group(function () {
-    Route::get("/series/{series}/episodes", "index");
-    Route::patch("/episodes/{episode}", "update");
-});
+Route::controller(EpisodesController::class)->group(
+    function () {
+        Route::get("/series/{series}/episodes", "index");
+        Route::patch("/episodes/{episode}", "update");
+    }
+);
