@@ -12,6 +12,8 @@ class SeasonsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param \App\Models\Series $series Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Series $series): JsonResponse
@@ -22,7 +24,8 @@ class SeasonsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request): void
@@ -33,7 +36,8 @@ class SeasonsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id): void
@@ -44,8 +48,9 @@ class SeasonsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request Description
+     * @param int                      $id      Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id): void
@@ -56,7 +61,8 @@ class SeasonsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id): void

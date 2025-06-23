@@ -11,11 +11,15 @@ use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
-    public function __construct(public readonly SeriesRepository $repository) {}
+    public function __construct(public readonly SeriesRepository $repository)
+    {
+    }
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @param \Illuminate\Http\Request $request Description
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index(Request $request): JsonResponse
     {
@@ -34,7 +38,8 @@ class SeriesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(SeriesFormRequest $request): JsonResponse
@@ -45,7 +50,8 @@ class SeriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(int $id): JsonResponse|null
@@ -60,8 +66,9 @@ class SeriesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request Description
+     * @param int                      $id      Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(SeriesFormRequest $request, int $id): void
@@ -72,7 +79,8 @@ class SeriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id Description
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
