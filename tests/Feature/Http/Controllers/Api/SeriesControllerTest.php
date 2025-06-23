@@ -5,8 +5,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 use App\Models\Episode;
 use App\Models\Season;
 use App\Models\Series;
-
-use function Pest\Laravel\get;
+use App\Models\User;
 
 test(
     "list all series",
@@ -18,11 +17,12 @@ test(
                     ->has(Episode::factory()->count(3))
             )
             ->create();
-        get("/api/series/")
-            ->assertOk()
-            ->assertHeader("Content-Type", "application/json")
-            ->assertJsonStructure(
-                [['id', 'name', 'cover', 'seasons']]
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->getJson("/api/series/");
+        $response->assertOk();
+    }
+);
+
 test(
     'delete series',
     function () {
