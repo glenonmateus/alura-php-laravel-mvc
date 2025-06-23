@@ -52,8 +52,10 @@ class EpisodesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Episode $episode, SeriesFormRequest $request): JsonResponse
-    {
+    public function update(
+        Episode $episode,
+        SeriesFormRequest $request
+    ): JsonResponse {
         $episode->watched = $request->watched;
         $episode->save();
         return response()->json($episode);

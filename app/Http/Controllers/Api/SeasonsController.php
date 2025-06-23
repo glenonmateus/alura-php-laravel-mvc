@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Season;
 use App\Models\Series;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SeasonsController extends Controller
@@ -14,7 +14,7 @@ class SeasonsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Series $series)
+    public function index(Series $series): JsonResponse
     {
         return response()->json($series->seasons);
     }
@@ -25,7 +25,7 @@ class SeasonsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): void
     {
         //
     }
@@ -36,7 +36,7 @@ class SeasonsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): void
     {
         //
     }
@@ -48,7 +48,7 @@ class SeasonsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): void
     {
         //
     }
@@ -59,7 +59,7 @@ class SeasonsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id): void
     {
         //
     }
