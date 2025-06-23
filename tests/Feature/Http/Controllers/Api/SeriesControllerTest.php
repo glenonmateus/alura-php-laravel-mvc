@@ -41,3 +41,14 @@ test(
     }
 );
 
+test(
+    "create series",
+    function () {
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->postJson(
+            "/api/series/",
+            ["name" => "test", "seasons" => 1, "episodesPerSeason" => 1]
+        );
+        $response->assertStatus(201);
+    }
+);
