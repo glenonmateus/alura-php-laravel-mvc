@@ -6,37 +6,40 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Repositories\SeriesRepository;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class SeriesController extends Controller
 {
-    public function __construct(
-        public readonly SeriesRepository $repository
-    ) {
-    }
+    public function __construct(public readonly SeriesRepository $repository) {}
     /**
      * Display a listing of the resource.
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(Series::with('seasons.episodes')->get());
+        if (!$request->has("name")) {
+            return response()->json(
+                Series::with("seasons.episodes")->paginate()
+            );
+        }
+        return response()->json(
+            Series::with("seasons.episodes")
+                ->where("name", "like", "%{$request->name}%")
+                ->paginate()
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(SeriesFormRequest $request): JsonResponse
     {
-        return response()
-            ->json($this->repository->add($request), 201);
+        return response()->json($this->repository->add($request), 201);
     }
 
     /**
@@ -47,9 +50,9 @@ class SeriesController extends Controller
      */
     public function show(int $id): JsonResponse|null
     {
-        $series = Series::with('seasons.episodes')->find($id);
+        $series = Series::with("seasons.episodes")->find($id);
         if ($series === null) {
-            return response()->json(['message' => 'Series not found'], 404);
+            return response()->json(["message" => "Series not found"], 404);
         }
         return response()->json($series);
     }
@@ -63,7 +66,7 @@ class SeriesController extends Controller
      */
     public function update(SeriesFormRequest $request, int $id): void
     {
-        Series::where('id', $id)->update($request->all());
+        Series::where("id", $id)->update($request->all());
     }
 
     /**
