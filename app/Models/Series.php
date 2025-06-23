@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
+/**
+ * Class Series
+ * @package App\Models
+ * @mixin Builder
+ */
 class Series extends Model
 {
     use HasFactory;

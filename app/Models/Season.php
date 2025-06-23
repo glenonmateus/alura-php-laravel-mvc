@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class Season
+ * @package App\Models
+ * @mixin Builder
+ */
 class Season extends Model
 {
     use HasFactory;
@@ -25,7 +30,7 @@ class Season extends Model
     public function numberOfWatchedEpisodes(): int
     {
         return $this->episodes
-            ->filter(fn ($episode) => $episode->watched)
+            ->filter(fn($episode) => $episode->watched)
             ->count();
     }
 }
