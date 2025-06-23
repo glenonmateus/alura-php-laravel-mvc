@@ -23,7 +23,21 @@ test(
             ->assertHeader("Content-Type", "application/json")
             ->assertJsonStructure(
                 [['id', 'name', 'cover', 'seasons']]
+test(
+    'delete series',
+    function () {
+        $series = Series::factory()
+            ->has(
+                Season::factory()
+                    ->count(3)
+                    ->has(Episode::factory()->count(3))
             )
-            ->assertJsonCount(1);
+            ->create();
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->deleteJson(
+            "/api/series/" . $series->id
+        );
+        $response->assertNoContent();
     }
 );
+
