@@ -9,7 +9,7 @@ use App\Models\Series;
 use function Pest\Laravel\get;
 
 test(
-    "list all series",
+    "get season from series",
     function () {
         $series = Series::factory()
             ->has(
@@ -18,12 +18,24 @@ test(
                     ->has(Episode::factory()->count(3))
             )
             ->create();
-        get("/api/series/")
+
+        get("/api/series/{$series->id}/seasons")
             ->assertOk()
             ->assertHeader("Content-Type", "application/json")
+            ->assertJsonCount(3)
             ->assertJsonStructure(
-                [['id', 'name', 'cover', 'seasons']]
-            )
-            ->assertJsonCount(1);
+                [['id','number','series_id','created_at','updated_at']]
+            );
+    }
+);
+
+test(
+    "not found series",
+    function () {
+        get("/api/series/0/seasons")
+            ->assertNotFound()
+            ->assertJsonStructure(
+                ['message']
+            );
     }
 );
