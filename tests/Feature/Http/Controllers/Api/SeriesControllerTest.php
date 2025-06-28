@@ -7,18 +7,21 @@ use App\Models\Season;
 use App\Models\Series;
 use App\Models\User;
 
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->series = Series::factory()
+        ->has(
+            Season::factory()
+                ->count(3)
+                ->has(Episode::factory()->count(3))
+        )
+        ->create();
+});
+
 test(
     "list all series",
     function () {
-        $series = Series::factory()
-            ->has(
-                Season::factory()
-                    ->count(3)
-                    ->has(Episode::factory()->count(3))
-            )
-            ->create();
-        $user = User::factory()->create();
-        $response = $this->actingAs($user)->getJson("/api/series/");
+        $response = $this->actingAs($this->user)->getJson("/api/series/");
         $response->assertOk();
     }
 );
@@ -26,16 +29,8 @@ test(
 test(
     'delete series',
     function () {
-        $series = Series::factory()
-            ->has(
-                Season::factory()
-                    ->count(3)
-                    ->has(Episode::factory()->count(3))
-            )
-            ->create();
-        $user = User::factory()->create();
-        $response = $this->actingAs($user)->deleteJson(
-            "/api/series/" . $series->id
+        $response = $this->actingAs($this->user)->deleteJson(
+            "/api/series/{$this->series->id}"
         );
         $response->assertNoContent();
     }
@@ -44,11 +39,32 @@ test(
 test(
     "create series",
     function () {
-        $user = User::factory()->create();
-        $response = $this->actingAs($user)->postJson(
+        $response = $this->actingAs($this->user)->postJson(
             "/api/series/",
             ["name" => "test", "seasons" => 1, "episodesPerSeason" => 1]
         );
-        $response->assertStatus(201);
+        $response->assertCreated();
+    }
+);
+
+test(
+    "show 1 series",
+    function () {
+        $response = $this->actingAs($this->user)->getJson(
+            "/api/series/{$this->series->id}"
+        );
+        $response->assertOk();
+    }
+);
+
+test(
+    "put series",
+    function () {
+        $response = $this->actingAs($this->user)->putJson(
+            "/api/series/{$this->series->id}",
+            ["name" => "teste"]
+        );
+        $response->assertOk();
+        $this->assertDatabaseHas('series', ["name" => "teste"]);
     }
 );
